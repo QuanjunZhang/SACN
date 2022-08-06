@@ -459,6 +459,11 @@ public class AbsModifier implements CListener {
 	 */
 	@Override public void exitTypeSpecifier(CParser.TypeSpecifierContext ctx) {
 		String typeName=ctx.getText();
+		if(Vocabulary.typeSepecifier.contains(typeName)){
+			//是修饰符
+			return;
+		}
+
 		if(AntlrUtils.isBasicType(ctx)){
 			TerminalNode node= (TerminalNode) ctx.getChild(0);
 			ctx.removeLastChild();
@@ -477,7 +482,7 @@ public class AbsModifier implements CListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitStructOrUnionSpecifier(CParser.StructOrUnionSpecifierContext ctx) {
-		boolean isStruct=ctx.structOrUnion().getText().equals("struct");
+		if(ctx.Identifier()==null)return;
 		String name=ctx.Identifier().getText();
 		ctx.children.remove(0);
 		TerminalNode node= (TerminalNode) ctx.children.get(0);
@@ -867,7 +872,12 @@ public class AbsModifier implements CListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitTypedefName(CParser.TypedefNameContext ctx) { }
+	@Override public void exitTypedefName(CParser.TypedefNameContext ctx) {
+		String name=ctx.Identifier().getText();
+		TerminalNode node= (TerminalNode) ctx.children.get(0);
+		ctx.children.remove(0);
+		ctx.children.add(0,new TerminalNodeProxy(node,Vocabulary.TYPE_PREFIX+Vocabulary.types.indexOf(name)));
+	}
 	/**
 	 * {@inheritDoc}
 	 *

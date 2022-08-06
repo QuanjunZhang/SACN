@@ -431,8 +431,12 @@ public class AbsDetector implements CListener {
 	 */
 	@Override public void exitTypeSpecifier(CParser.TypeSpecifierContext ctx) {
 		String typeName=ctx.getText();
+		if(Vocabulary.typeSepecifier.contains(typeName)){
+			//是修饰符
+			return;
+		}
 
-		//只处理基本类型
+		//处理基本类型
 		if(AntlrUtils.isBasicType(ctx) && !Vocabulary.types.contains(typeName)){
 			Vocabulary.types.add(typeName);
 			logger.info(String.format("find type %s",typeName));
@@ -450,6 +454,7 @@ public class AbsDetector implements CListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitStructOrUnionSpecifier(CParser.StructOrUnionSpecifierContext ctx) {
+		if(ctx.Identifier()==null)return;
 		String name=ctx.Identifier().getText();
 		boolean isStruct=ctx.structOrUnion().getText().equals("struct");
 		if(!Vocabulary.structOrUnions.contains(name)){
@@ -840,7 +845,14 @@ public class AbsDetector implements CListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitTypedefName(CParser.TypedefNameContext ctx) { }
+	@Override public void exitTypedefName(CParser.TypedefNameContext ctx) {
+		//处理用户定义类型
+		String name=ctx.Identifier().getText();
+		if(!Vocabulary.types.contains(name)){
+			Vocabulary.types.add(name);
+			logger.info(String.format("find type: %s",name));
+		}
+	}
 	/**
 	 * {@inheritDoc}
 	 *

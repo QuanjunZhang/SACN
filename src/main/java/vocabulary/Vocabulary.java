@@ -15,9 +15,10 @@ public class Vocabulary {
     public static List<String> types = new ArrayList<>();
     public static List<String> structOrUnions = new ArrayList<>();
     public static List<String> variants = new ArrayList<>();
-    public static final Set<String> retainWords= Set.of("auto","break","case","char","const","continue","default","do","double","else","enum","extern","float","\n" +
+    public static final Set<String> retainWords= Set.of("auto","break","case","char","const","continue","default","do","double","else","enum","extern","float",
             "for","goto","if","int","long","register","return","short","signed","sizeof","static","struct",
             "switch","typedef","union", "unsigned","void","volatile","while");
+    public static final Set<String> typeSepecifier=Set.of("auto", "const", "register", "static", "volatile", "extern","unsigned","signed");
 
 
     public static boolean isCustomVariant(TerminalNode node){

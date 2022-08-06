@@ -86,7 +86,7 @@ public class CAbstractor {
     }
 
     public static void main(String[] args) throws IOException {
-        abs("C:\\Users\\tom\\Desktop\\cabs\\src\\main\\resources\\code\\c\\test.c","C:\\Users\\tom\\Desktop\\cabs\\src\\main\\resources\\code\\c\\output.c","C:\\Users\\tom\\Desktop\\cabs\\src\\main\\resources\\code\\c\\output.map");
+        abs("C:\\Users\\tom\\Desktop\\cabs\\src\\main\\resources\\code\\c\\test3.c","C:\\Users\\tom\\Desktop\\cabs\\src\\main\\resources\\code\\c\\output3.c","C:\\Users\\tom\\Desktop\\cabs\\src\\main\\resources\\code\\c\\output3.map");
     }
 
 
