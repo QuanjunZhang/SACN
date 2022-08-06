@@ -8,5 +8,5 @@ c语言抽象化工具
 > outputMapPath: 抽象映射表
 
 
-
+java -jar cabs-1.0-SNAPSHOT.jar C:\\Users\\tom\\Desktop\\cabs\\src\\main\\resources\\code\\c\\test3.c C:\\Users\\tom\\Desktop\\cabs\\src\\main\\resources\\code\\c\\output3.c C:\\Users\\tom\\Desktop\\cabs\\src\\main\\resources\\code\\c\\output3.map
 
