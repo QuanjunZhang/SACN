@@ -3,14 +3,14 @@ SeekBlob EOFBlob ReadBlobLSBLong ReadBlobMSBLong ReadBlobByte ThrowFileException
 Method_0 Method_1 Method_2 Method_3 Method_4 Method_5 Method_6 Method_7 Method_8 Method_9 Method_10 Method_11 Method_12 Method_13 Method_14 Method_15 Method_16 Method_17 Method_18 Method_19 Method_20 Method_21 Method_22 Method_23 Method_24 Method_25 Method_26 Method_27 Method_28 Method_29 Method_30 Method_31 Method_32 Method_33 Method_34 
 
 Types:
-Image ImageInfo ExceptionInfo char int MAT4_HDR long ldblk EndianType endian MagickBooleanType status HDR QuantumFormatType format_type ssize_t i depth void byte size_t QuantumInfo Quantum CacheView MagickOffsetType double float 
-Type_0 Type_1 Type_2 Type_3 Type_4 Type_5 Type_6 Type_7 Type_8 Type_9 Type_10 Type_11 Type_12 Type_13 Type_14 Type_15 Type_16 Type_17 Type_18 Type_19 Type_20 Type_21 Type_22 Type_23 Type_24 Type_25 Type_26 
+Image ImageInfo ExceptionInfo char int long EndianType MagickBooleanType MAT4_HDR QuantumFormatType ssize_t void size_t QuantumInfo Quantum CacheView MagickOffsetType double float 
+Type_0 Type_1 Type_2 Type_3 Type_4 Type_5 Type_6 Type_7 Type_8 Type_9 Type_10 Type_11 Type_12 Type_13 Type_14 Type_15 Type_16 Type_17 Type_18 
 
 Struct Or Union:
 
 
 
 VAR:
-image_info image exception Type nRows nCols imagf nameLen rotate_image quantum_info count y pixels SEEK_SET MagickFalse LSBEndian MSBEndian NULL EOF CorruptImageError filename columns rows GRAYColorspace ping FloatingPointQuantumFormat UnsignedQuantumFormat SignedQuantumFormat magick_restrict q GrayQuantum previous LoadImageTag number_scenes scene LoadImagesTag 
-VAR_0 VAR_1 VAR_2 VAR_3 VAR_4 VAR_5 VAR_6 VAR_7 VAR_8 VAR_9 VAR_10 VAR_11 VAR_12 VAR_13 VAR_14 VAR_15 VAR_16 VAR_17 VAR_18 VAR_19 VAR_20 VAR_21 VAR_22 VAR_23 VAR_24 VAR_25 VAR_26 VAR_27 VAR_28 VAR_29 VAR_30 VAR_31 VAR_32 VAR_33 VAR_34 VAR_35 
+image_info image exception Type nRows nCols imagf nameLen ldblk endian rotate_image status HDR quantum_info format_type i count y pixels depth SEEK_SET MagickFalse LSBEndian MSBEndian NULL byte EOF CorruptImageError filename columns rows GRAYColorspace ping FloatingPointQuantumFormat UnsignedQuantumFormat SignedQuantumFormat magick_restrict q GrayQuantum previous LoadImageTag number_scenes scene LoadImagesTag 
+VAR_0 VAR_1 VAR_2 VAR_3 VAR_4 VAR_5 VAR_6 VAR_7 VAR_8 VAR_9 VAR_10 VAR_11 VAR_12 VAR_13 VAR_14 VAR_15 VAR_16 VAR_17 VAR_18 VAR_19 VAR_20 VAR_21 VAR_22 VAR_23 VAR_24 VAR_25 VAR_26 VAR_27 VAR_28 VAR_29 VAR_30 VAR_31 VAR_32 VAR_33 VAR_34 VAR_35 VAR_36 VAR_37 VAR_38 VAR_39 VAR_40 VAR_41 VAR_42 VAR_43 
 
