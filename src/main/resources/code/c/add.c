@@ -14,6 +14,6 @@
     {
         a.b.main();
         c.main(1,2);
-        main=(0)+(1);
+        main().a.b.c;
         main();
     }

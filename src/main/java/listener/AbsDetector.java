@@ -1,19 +1,22 @@
+// Generated from C:/Users/tom/Desktop/cabs/src/main/resources/grammar\C.g4 by ANTLR 4.10.1
 package listener;
 
 import cInterpreter.CListener;
 import cInterpreter.CParser;
 import org.antlr.v4.runtime.ParserRuleContext;
-import org.antlr.v4.runtime.tree.*;
+import org.antlr.v4.runtime.tree.ErrorNode;
+import org.antlr.v4.runtime.tree.TerminalNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import vocabulary.Vocabulary;
+import utils.AntlrUtils;
 
 /**
- * 修改ParseTree，替换函数定义和函数调用中的函数名
+ * 检测函数定义，函数调用，记录函数名
+ * 检测类型，记录类型名
  */
-public class MethodNameModifier implements CListener {
-	private static final Logger logger= LoggerFactory.getLogger(MethodNameModifier.class);
-
+public class AbsDetector implements CListener {
+	private static final Logger logger= LoggerFactory.getLogger(AbsDetector.class);
 	/**
 	 * {@inheritDoc}
 	 *
@@ -25,14 +28,7 @@ public class MethodNameModifier implements CListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitPrimaryExpression(CParser.PrimaryExpressionContext ctx) {
-		//检测函数调用
-//		if(Vocabulary.methods.contains(ctx.getText())){
-//			TerminalNode t=new NewTerminalNodeImpl((TerminalNodeImpl) ctx.getChild(0),Vocabulary.METHOD_PREFIX+Vocabulary.methods.indexOf(ctx.getText()));
-//			ctx.removeLastChild();
-//			ctx.addChild(t);
-//		}
-	}
+	@Override public void exitPrimaryExpression(CParser.PrimaryExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -90,19 +86,8 @@ public class MethodNameModifier implements CListener {
 						ctx.getChild(i+1).getText().equals("(") &&
 								ctx.getChild(i+2).getText().equals(")")) {
 					String methodName = ctx.getChild(i).getText();
-					if (Vocabulary.methods.contains(methodName)) {
-						//无域 f()
-						if(ctx.getChild(i) instanceof CParser.PrimaryExpressionContext){
-							TerminalNode node=(TerminalNode) ctx.getChild(i).getChild(0);
-							((CParser.PrimaryExpressionContext) ctx.getChild(i)).removeLastChild();
-							((CParser.PrimaryExpressionContext) ctx.getChild(i)).addChild(new TerminalNodeProxy(node,Vocabulary.METHOD_PREFIX+Vocabulary.methods.indexOf(node.getText())));
-						}
-						//有域 a.f()
-						else{
-							TerminalNode node=(TerminalNode) ctx.getChild(i);
-							ctx.children.remove(i);
-							ctx.children.add(i,new TerminalNodeProxy(node,Vocabulary.METHOD_PREFIX+Vocabulary.methods.indexOf(node.getText())));
-						}
+					if (!Vocabulary.methods.contains(methodName)) {
+						Vocabulary.methods.add(methodName);
 					}
 				}
 			}
@@ -112,28 +97,14 @@ public class MethodNameModifier implements CListener {
 			for(int i=0;i<=childCount-4;i++){
 				if(
 						ctx.getChild(i+1).getText().equals("(")&&
-								ctx.getChild(i+2) instanceof CParser.ArgumentExpressionListContext&&
-								ctx.getChild(i+3).getText().equals(")")){
+						ctx.getChild(i+2) instanceof CParser.ArgumentExpressionListContext&&
+						ctx.getChild(i+3).getText().equals(")")){
 					String methodName=ctx.getChild(i).getText();
-					if(Vocabulary.methods.contains(methodName)){
-						//无域 f(1,2)
-						if(ctx.getChild(i) instanceof CParser.PrimaryExpressionContext){
-							TerminalNode node=(TerminalNode) ctx.getChild(i).getChild(0);
-							((CParser.PrimaryExpressionContext) ctx.getChild(i)).removeLastChild();
-							((CParser.PrimaryExpressionContext) ctx.getChild(i)).addChild(new TerminalNodeProxy(node,Vocabulary.METHOD_PREFIX+Vocabulary.methods.indexOf(node.getText())));
-						}
-						//有域 a.f(1,2)
-						else{
-							TerminalNode node=(TerminalNode) ctx.getChild(i);
-							ctx.children.remove(i);
-							ctx.children.add(i,new TerminalNodeProxy(node,Vocabulary.METHOD_PREFIX+Vocabulary.methods.indexOf(node.getText())));
-						}
-					}
+					if(!Vocabulary.methods.contains(methodName)){Vocabulary.methods.add(methodName);}
 				}
 			}
+
 		}
-
-
 	}
 	/**
 	 * {@inheritDoc}
@@ -458,7 +429,15 @@ public class MethodNameModifier implements CListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitTypeSpecifier(CParser.TypeSpecifierContext ctx) { }
+	@Override public void exitTypeSpecifier(CParser.TypeSpecifierContext ctx) {
+		String typeName=ctx.getText();
+
+		//只处理基本类型
+		if(AntlrUtils.isBasicType(ctx) && !Vocabulary.types.contains(typeName)){
+			Vocabulary.types.add(typeName);
+			logger.info(String.format("find type %s",typeName));
+		}
+	}
 	/**
 	 * {@inheritDoc}
 	 *
@@ -470,7 +449,14 @@ public class MethodNameModifier implements CListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitStructOrUnionSpecifier(CParser.StructOrUnionSpecifierContext ctx) { }
+	@Override public void exitStructOrUnionSpecifier(CParser.StructOrUnionSpecifierContext ctx) {
+		String name=ctx.Identifier().getText();
+		boolean isStruct=ctx.structOrUnion().getText().equals("struct");
+		if(!Vocabulary.structOrUnions.contains(name)){
+			Vocabulary.structOrUnions.add(name);
+			logger.info(String.format("find %s %s",isStruct?"struct":"union",name));
+		}
+	}
 	/**
 	 * {@inheritDoc}
 	 *
@@ -1112,20 +1098,27 @@ public class MethodNameModifier implements CListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterFunctionDefinition(CParser.FunctionDefinitionContext ctx) { }
+	@Override public void enterFunctionDefinition(CParser.FunctionDefinitionContext ctx) {
+		//logger.info("find method definition");
+	}
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitFunctionDefinition(CParser.FunctionDefinitionContext ctx) {
-		CParser.DirectDeclaratorContext directDeclaratorContext=ctx.declarator().directDeclarator().directDeclarator();
-		//方法名
-		TerminalNode t=new TerminalNodeProxy((TerminalNodeImpl) directDeclaratorContext.getChild(0),Vocabulary.METHOD_PREFIX+Vocabulary.methods.indexOf(directDeclaratorContext.getText()));
-		directDeclaratorContext.removeLastChild();
-		directDeclaratorContext.addChild(t);
-	}
+        //修饰符
+		ctx.declarationSpecifiers();
 
+		CParser.DirectDeclaratorContext directDeclaratorContext=ctx.declarator().directDeclarator();
+		//方法名
+		String methodName=directDeclaratorContext.directDeclarator().getText();
+		Vocabulary.methods.add(methodName);
+
+		//参数列表
+		CParser.ParameterTypeListContext parameterTypeListContext=directDeclaratorContext.parameterTypeList();
+		logger.info(String.format("find method %s(%s)",methodName,parameterTypeListContext==null?"void": AntlrUtils.toCode(parameterTypeListContext)));
+	}
 	/**
 	 * {@inheritDoc}
 	 *
@@ -1156,9 +1149,7 @@ public class MethodNameModifier implements CListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void visitTerminal(TerminalNode node) {
-		//logger.info("visit end");
-	}
+	@Override public void visitTerminal(TerminalNode node) { }
 	/**
 	 * {@inheritDoc}
 	 *
