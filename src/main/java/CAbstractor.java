@@ -86,7 +86,12 @@ public class CAbstractor {
     }
 
     public static void main(String[] args) throws IOException {
-        abs("C:\\Users\\tom\\Desktop\\cabs\\src\\main\\resources\\code\\c\\test3.c","C:\\Users\\tom\\Desktop\\cabs\\src\\main\\resources\\code\\c\\output3.c","C:\\Users\\tom\\Desktop\\cabs\\src\\main\\resources\\code\\c\\output3.map");
+        if(args.length<3){
+            System.err.println("not enough params");
+            return;
+        }
+        abs(args[0],args[1],args[2]);
+//        abs("C:\\Users\\tom\\Desktop\\cabs\\src\\main\\resources\\code\\c\\test3.c","C:\\Users\\tom\\Desktop\\cabs\\src\\main\\resources\\code\\c\\output3.c","C:\\Users\\tom\\Desktop\\cabs\\src\\main\\resources\\code\\c\\output3.map");
     }
 
 

@@ -439,7 +439,7 @@ public class AbsDetector implements CListener {
 		//处理基本类型
 		if(AntlrUtils.isBasicType(ctx) && !Vocabulary.types.contains(typeName)){
 			Vocabulary.types.add(typeName);
-			logger.info(String.format("find type %s",typeName));
+			logger.info(String.format("find type: %s",typeName));
 		}
 	}
 	/**

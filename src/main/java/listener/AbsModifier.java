@@ -1185,7 +1185,7 @@ public class AbsModifier implements CListener {
 			String name=node.getText();
 			if(!Vocabulary.variants.contains(name)){
 				Vocabulary.variants.add(name);
-				logger.info("Variant:"+node.getText());
+				logger.info("find variant:"+node.getText());
 			}
 			List<ParseTree> children=((ParserRuleContext)node.getParent()).children;
 			int index=children.indexOf(node);
