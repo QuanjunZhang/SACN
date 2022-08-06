@@ -1,6 +1,6 @@
 import cInterpreter.CLexer;
 import cInterpreter.CParser;
-import listener.MethodDeclarationListener;
+import listener.MethodNameDetector;
 import listener.MethodNameModifier;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -12,10 +12,10 @@ import java.io.InputStream;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        InputStream inputStream = new FileInputStream("C:\\Users\\tom\\Desktop\\cabs\\src\\main\\resources\\code\\c\\add.c");
+        InputStream inputStream = new FileInputStream("C:\\Users\\tom\\Desktop\\cabs\\src\\main\\resources\\code\\c\\test.c");
         CLexer cLexer=new CLexer(CharStreams.fromStream(inputStream));
         CParser cParser=new CParser(new CommonTokenStream(cLexer));
-        MethodDeclarationListener listener=new MethodDeclarationListener();
+        MethodNameDetector listener=new MethodNameDetector();
         cParser.addParseListener(listener);
         System.out.println(cParser.compilationUnit().toStringTree(cParser));
         cParser.reset();

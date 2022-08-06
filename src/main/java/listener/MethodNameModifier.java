@@ -13,6 +13,7 @@ import vocabulary.Vocabulary;
  */
 public class MethodNameModifier implements CListener {
 	private static final Logger logger= LoggerFactory.getLogger(MethodNameModifier.class);
+
 	/**
 	 * {@inheritDoc}
 	 *
@@ -26,11 +27,11 @@ public class MethodNameModifier implements CListener {
 	 */
 	@Override public void exitPrimaryExpression(CParser.PrimaryExpressionContext ctx) {
 		//检测函数调用
-		if(Vocabulary.methods.contains(ctx.getText())){
-			TerminalNode t=new NewTerminalNodeImpl((TerminalNodeImpl) ctx.getChild(0),Vocabulary.METHOD_PREFIX+Vocabulary.methods.indexOf(ctx.getText()));
-			ctx.removeLastChild();
-			ctx.addChild(t);
-		}
+//		if(Vocabulary.methods.contains(ctx.getText())){
+//			TerminalNode t=new NewTerminalNodeImpl((TerminalNodeImpl) ctx.getChild(0),Vocabulary.METHOD_PREFIX+Vocabulary.methods.indexOf(ctx.getText()));
+//			ctx.removeLastChild();
+//			ctx.addChild(t);
+//		}
 	}
 	/**
 	 * {@inheritDoc}
@@ -81,6 +82,57 @@ public class MethodNameModifier implements CListener {
 	 */
 	@Override public void exitPostfixExpression(CParser.PostfixExpressionContext ctx) {
 		//检测函数调用
+		int childCount=ctx.getChildCount();
+		//无参函数
+		if(childCount>=3){
+			for(int i=0;i<=childCount-3;i++) {
+				if (
+						ctx.getChild(i+1).getText().equals("(") &&
+								ctx.getChild(i+2).getText().equals(")")) {
+					String methodName = ctx.getChild(i).getText();
+					if (Vocabulary.methods.contains(methodName)) {
+						//无域 f()
+						if(ctx.getChild(i) instanceof CParser.PrimaryExpressionContext){
+							TerminalNode node=(TerminalNode) ctx.getChild(i).getChild(0);
+							((CParser.PrimaryExpressionContext) ctx.getChild(i)).removeLastChild();
+							((CParser.PrimaryExpressionContext) ctx.getChild(i)).addChild(new TerminalNodeProxy(node,Vocabulary.METHOD_PREFIX+Vocabulary.methods.indexOf(node.getText())));
+						}
+						//有域 a.f()
+						else{
+							TerminalNode node=(TerminalNode) ctx.getChild(i);
+							ctx.children.remove(i);
+							ctx.children.add(i,new TerminalNodeProxy(node,Vocabulary.METHOD_PREFIX+Vocabulary.methods.indexOf(node.getText())));
+						}
+					}
+				}
+			}
+		}
+		//有参函数
+		if(childCount>=4){
+			for(int i=0;i<=childCount-4;i++){
+				if(
+						ctx.getChild(i+1).getText().equals("(")&&
+								ctx.getChild(i+2) instanceof CParser.ArgumentExpressionListContext&&
+								ctx.getChild(i+3).getText().equals(")")){
+					String methodName=ctx.getChild(i).getText();
+					if(Vocabulary.methods.contains(methodName)){
+						//无域 f(1,2)
+						if(ctx.getChild(i) instanceof CParser.PrimaryExpressionContext){
+							TerminalNode node=(TerminalNode) ctx.getChild(i).getChild(0);
+							((CParser.PrimaryExpressionContext) ctx.getChild(i)).removeLastChild();
+							((CParser.PrimaryExpressionContext) ctx.getChild(i)).addChild(new TerminalNodeProxy(node,Vocabulary.METHOD_PREFIX+Vocabulary.methods.indexOf(node.getText())));
+						}
+						//有域 a.f(1,2)
+						else{
+							TerminalNode node=(TerminalNode) ctx.getChild(i);
+							ctx.children.remove(i);
+							ctx.children.add(i,new TerminalNodeProxy(node,Vocabulary.METHOD_PREFIX+Vocabulary.methods.indexOf(node.getText())));
+						}
+					}
+				}
+			}
+		}
+
 
 	}
 	/**
@@ -1069,7 +1121,7 @@ public class MethodNameModifier implements CListener {
 	@Override public void exitFunctionDefinition(CParser.FunctionDefinitionContext ctx) {
 		CParser.DirectDeclaratorContext directDeclaratorContext=ctx.declarator().directDeclarator().directDeclarator();
 		//方法名
-		TerminalNode t=new NewTerminalNodeImpl((TerminalNodeImpl) directDeclaratorContext.getChild(0),Vocabulary.METHOD_PREFIX+Vocabulary.methods.indexOf(directDeclaratorContext.getText()));
+		TerminalNode t=new TerminalNodeProxy((TerminalNodeImpl) directDeclaratorContext.getChild(0),Vocabulary.METHOD_PREFIX+Vocabulary.methods.indexOf(directDeclaratorContext.getText()));
 		directDeclaratorContext.removeLastChild();
 		directDeclaratorContext.addChild(t);
 	}

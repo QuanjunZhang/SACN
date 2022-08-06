@@ -7,16 +7,15 @@ import org.antlr.v4.runtime.misc.Interval;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeVisitor;
 import org.antlr.v4.runtime.tree.TerminalNode;
-import org.antlr.v4.runtime.tree.TerminalNodeImpl;
 
-public class NewTerminalNodeImpl implements TerminalNode {
-    private final TerminalNodeImpl terminalNode;
+public class TerminalNodeProxy implements TerminalNode {
+    private final TerminalNode terminalNode;
     private final String text;
-    public NewTerminalNodeImpl(TerminalNodeImpl terminalNode,String text) {
+    public TerminalNodeProxy(TerminalNode terminalNode, String text) {
         this.terminalNode=terminalNode;
         this.text=text;
     }
-    private NewTerminalNodeImpl(){
+    private TerminalNodeProxy(){
         text = null;
         terminalNode = null;
     }

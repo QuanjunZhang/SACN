@@ -11,10 +11,10 @@ import org.slf4j.LoggerFactory;
 import vocabulary.Vocabulary;
 
 /**
- * 检测函数定义，记录函数名
+ * 检测函数定义，函数调用，记录函数名
  */
-public class MethodDeclarationListener implements CListener {
-	private static final Logger logger= LoggerFactory.getLogger(MethodDeclarationListener.class);
+public class MethodNameDetector implements CListener {
+	private static final Logger logger= LoggerFactory.getLogger(MethodNameDetector.class);
 	/**
 	 * {@inheritDoc}
 	 *
@@ -76,7 +76,33 @@ public class MethodDeclarationListener implements CListener {
 	 */
 	@Override public void exitPostfixExpression(CParser.PostfixExpressionContext ctx) {
 		//检测函数调用
+		int childCount=ctx.getChildCount();
+		//无参函数
+		if(childCount>=3){
+			for(int i=0;i<=childCount-3;i++) {
+				if (
+						ctx.getChild(i+1).getText().equals("(") &&
+								ctx.getChild(i+2).getText().equals(")")) {
+					String methodName = ctx.getChild(i).getText();
+					if (!Vocabulary.methods.contains(methodName)) {
+						Vocabulary.methods.add(methodName);
+					}
+				}
+			}
+		}
+		//有参函数
+		if(childCount>=4){
+			for(int i=0;i<=childCount-4;i++){
+				if(
+						ctx.getChild(i+1).getText().equals("(")&&
+						ctx.getChild(i+2) instanceof CParser.ArgumentExpressionListContext&&
+						ctx.getChild(i+3).getText().equals(")")){
+					String methodName=ctx.getChild(i).getText();
+					if(!Vocabulary.methods.contains(methodName)){Vocabulary.methods.add(methodName);}
+				}
+			}
 
+		}
 	}
 	/**
 	 * {@inheritDoc}
@@ -1056,7 +1082,7 @@ public class MethodDeclarationListener implements CListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void enterFunctionDefinition(CParser.FunctionDefinitionContext ctx) {
-		logger.info("find method");
+		logger.info("find method definition");
 	}
 	/**
 	 * {@inheritDoc}
