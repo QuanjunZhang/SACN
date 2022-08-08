@@ -19,6 +19,11 @@ public class Vocabulary {
     public static final Set<String> typeSepecifier=new HashSet<>(Arrays.asList("auto", "const", "register", "static", "volatile", "extern","unsigned","signed"));
 
 
+    /**
+     * 变量命名规范
+     * @param node
+     * @return
+     */
     public static boolean isCustomVariant(TerminalNode node){
         String text=node.getText();
         boolean isLegalName = Pattern.matches("[a-zA-Z_]+[a-zA-Z0-9]*", text);

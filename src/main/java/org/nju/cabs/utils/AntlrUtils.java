@@ -7,6 +7,8 @@ import org.antlr.v4.runtime.tree.TerminalNode;
 public class AntlrUtils {
     /**
      * parse tree 转成c代码
+     * @param parseTree
+     * @return
      */
     public static String toCode(ParseTree parseTree){
         if(parseTree.getChildCount()==0){return parseTree.getText();}
@@ -21,6 +23,11 @@ public class AntlrUtils {
         return t.toString();
     }
 
+    /**
+     * 错误占位符
+     * @param str
+     * @return
+     */
     public static String toErrorCode(String str){
         if(str.length()==0)return str;
         String[] errors=str.split(" ");
@@ -33,6 +40,8 @@ public class AntlrUtils {
 
     /**
      * 是否是基本类型
+     * @param ctx
+     * @return
      */
     public static boolean isBasicType(ParserRuleContext ctx){
         return ctx.children.stream().filter(parseTree -> parseTree instanceof TerminalNode).count()==ctx.children.size();
