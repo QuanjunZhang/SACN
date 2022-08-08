@@ -11,7 +11,11 @@ public class AntlrUtils {
      * @return
      */
     public static String toCode(ParseTree parseTree){
-        if(parseTree.getChildCount()==0){return parseTree.getText();}
+        if(parseTree.getChildCount()==0){
+            String s=parseTree.getText();
+            if(s.startsWith("<")&&s.endsWith(">"))return "";
+            return s;
+        }
         StringBuilder t= new StringBuilder();
         for(int i=0;i<parseTree.getChildCount();i++){
             String tt=toCode(parseTree.getChild(i));

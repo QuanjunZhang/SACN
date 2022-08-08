@@ -484,10 +484,9 @@ public class AbsModifier implements CListener {
 	@Override public void exitStructOrUnionSpecifier(CParser.StructOrUnionSpecifierContext ctx) {
 		if(ctx.Identifier()==null)return;
 		String name=ctx.Identifier().getText();
-		ctx.children.remove(0);
-		TerminalNode node= (TerminalNode) ctx.children.get(0);
-		ctx.children.remove(0);
-		ctx.children.add(0,new TerminalNodeProxy(node,Vocabulary.STRUCT_OR_UNION_PREFIX+Vocabulary.structOrUnions.indexOf(name)));
+		TerminalNode node= (TerminalNode) ctx.children.get(1);
+		ctx.children.remove(1);
+		ctx.children.add(1,new TerminalNodeProxy(node,Vocabulary.STRUCT_OR_UNION_PREFIX+Vocabulary.structOrUnions.indexOf(name)));
 	}
 	/**
 	 * {@inheritDoc}

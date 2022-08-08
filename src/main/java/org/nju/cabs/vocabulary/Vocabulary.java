@@ -26,7 +26,7 @@ public class Vocabulary {
      */
     public static boolean isCustomVariant(TerminalNode node){
         String text=node.getText();
-        boolean isLegalName = Pattern.matches("[a-zA-Z_]+[a-zA-Z0-9]*", text);
+        boolean isLegalName = Pattern.matches("[a-zA-Z_]+[a-zA-Z0-9_]*", text);
         return isLegalName&&
                 !methods.contains(text)&&
                 !types.contains(text)&&

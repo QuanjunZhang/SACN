@@ -36,11 +36,10 @@ public class CAbstractor {
 //        }
 //        String absCode=firstNotError==null?"":AntlrUtils.toCode(firstNotError);
         StringBuilder absCode= new StringBuilder();
-        boolean findNotError=false;
         for(ParseTree parseTree:context.children){
+            if(AntlrUtils.toCode(parseTree).contains("EOF"))continue;
 
-            if(!(parseTree instanceof ErrorNode) && !findNotError){
-                findNotError=true;
+            if(!(parseTree instanceof ErrorNode)){
                 absCode.append(AntlrUtils.toCode(parseTree));
                 continue;
             }
