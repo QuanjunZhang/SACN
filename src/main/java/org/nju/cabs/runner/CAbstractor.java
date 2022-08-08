@@ -1,5 +1,8 @@
 package org.nju.cabs.runner;
 
+import org.antlr.v4.runtime.ParserRuleContext;
+import org.antlr.v4.runtime.tree.ErrorNode;
+import org.antlr.v4.runtime.tree.ParseTree;
 import org.nju.cabs.cInterpreter.CLexer;
 import org.nju.cabs.cInterpreter.CParser;
 import org.nju.cabs.listener.AbsDetector;
@@ -24,8 +27,29 @@ public class CAbstractor {
         AbsModifier listener2=new AbsModifier();
         cParser.addParseListener(listener2);
         CParser.CompilationUnitContext context=cParser.compilationUnit();
-        String absCode=AntlrUtils.toCode(context.children.get(0));
-        System.out.println("After abs,code looks like:"+absCode);
+//        ParseTree firstNotError = null;
+//        for(ParseTree parseTree:context.children){
+//            if(!(parseTree instanceof ErrorNode)){
+//                firstNotError= parseTree;
+//                break;
+//            }
+//        }
+//        String absCode=firstNotError==null?"":AntlrUtils.toCode(firstNotError);
+        StringBuilder absCode= new StringBuilder();
+        boolean findNotError=false;
+        for(ParseTree parseTree:context.children){
+            if(parseTree instanceof ErrorNode){
+                absCode
+                        .append(absCode.length()==0?"":" ")
+                        .append(AntlrUtils.toErrorCode(AntlrUtils.toCode(parseTree)));
+            }
+            if(!(parseTree instanceof ErrorNode) && !findNotError){
+                findNotError=true;
+                absCode.append(AntlrUtils.toCode(parseTree));
+            }
+        }
+//        String absCode=firstNotError==null?"":AntlrUtils.toCode(firstNotError);
+        System.out.println("After abs,code looks like: "+ absCode);
 
         //输出代码
         if(!outputCodePath.endsWith(".c")){
@@ -33,7 +57,7 @@ public class CAbstractor {
         }
         File f=new File(outputCodePath);
         FileWriter writer=new FileWriter(f);
-        writer.write(absCode);
+        writer.write(absCode.toString());
         writer.flush();
         writer.close();
 
@@ -86,6 +110,7 @@ public class CAbstractor {
         writer.flush();
         writer.close();
     }
+
 
     public static void main(String[] args) throws IOException {
         if(args.length<3){

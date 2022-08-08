@@ -1,0 +1,1 @@
+ cblk_style & JPEG2000_CBLK_VSC ; av_assert0 ( width <= JPEG2000_MAX_CBLKW ) ; av_assert0 ( height <= JPEG2000_MAX_CBLKH );

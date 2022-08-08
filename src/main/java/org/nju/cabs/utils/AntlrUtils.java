@@ -21,6 +21,16 @@ public class AntlrUtils {
         return t.toString();
     }
 
+    public static String toErrorCode(String str){
+        if(str.length()==0)return str;
+        String[] errors=str.split(" ");
+        StringBuilder errorCode= new StringBuilder();
+        for(String ignored :errors){
+            errorCode.append(errorCode.length() == 0 ? "" : " ").append("<error>");
+        }
+        return errorCode.toString();
+    }
+
     /**
      * 是否是基本类型
      */
