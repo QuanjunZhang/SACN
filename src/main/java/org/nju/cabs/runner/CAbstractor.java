@@ -38,15 +38,16 @@ public class CAbstractor {
         StringBuilder absCode= new StringBuilder();
         boolean findNotError=false;
         for(ParseTree parseTree:context.children){
-            if(parseTree instanceof ErrorNode){
-                absCode
-                        .append(absCode.length()==0?"":" ")
-                        .append(AntlrUtils.toErrorCode(AntlrUtils.toCode(parseTree)));
-            }
+
             if(!(parseTree instanceof ErrorNode) && !findNotError){
                 findNotError=true;
                 absCode.append(AntlrUtils.toCode(parseTree));
+                continue;
             }
+            absCode
+                    .append(absCode.length()==0?"":" ")
+                    .append(AntlrUtils.toErrorCode(AntlrUtils.toCode(parseTree)));
+
         }
 //        String absCode=firstNotError==null?"":AntlrUtils.toCode(firstNotError);
         System.out.println("After abs,code looks like: "+ absCode);
