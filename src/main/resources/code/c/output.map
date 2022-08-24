@@ -1,16 +1,16 @@
 Method:
-UDF_I udf_encode_fh 
-Method_0 Method_1 
+printf main main2 main main2 
+Method_0 Method_1 Method_2 Method_3 Method_4 
 
 Types:
 int 
 Type_0 
 
 Struct Or Union:
-inode kernel_lb_addr fid 
-STRUCT_OR_UNION_0 STRUCT_OR_UNION_1 STRUCT_OR_UNION_2 
+
+
 
 VAR:
-__u32 fh lenp parent len location i_location type FILEID_UDF_WITHOUT_PARENT udf block logicalBlockNum partref partitionReferenceNum i_generation 
-VAR_0 VAR_1 VAR_2 VAR_3 VAR_4 VAR_5 VAR_6 VAR_7 VAR_8 VAR_9 VAR_10 VAR_11 VAR_12 VAR_13 VAR_14 
+i sum LAST a b c d 
+VAR_0 VAR_1 VAR_2 VAR_3 VAR_4 VAR_5 VAR_6 
 

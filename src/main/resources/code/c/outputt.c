@@ -1,0 +1,1 @@
+Type_0 Method_1 ( ) { Type_0 VAR_0 , VAR_1 = 0 ; for ( VAR_0 = 1 ; VAR_0 <= VAR_2 ; VAR_0 ++ ) { VAR_1 += VAR_0 ; } Method_0 ( "sum = %d\n" , VAR_1 ) ; return 0 ; } Type_0 Method_2 ( ) { VAR_3 . VAR_4 . Method_1 ( ) ; VAR_5 . Method_1 ( 1 , 2 ) ; Type_0 VAR_6 = 1 ; Method_1 ( ) . VAR_3 . VAR_4 . VAR_5 ; Method_1 ( ) ; }

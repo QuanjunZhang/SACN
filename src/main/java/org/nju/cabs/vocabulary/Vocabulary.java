@@ -5,8 +5,8 @@ import java.util.*;
 import java.util.regex.Pattern;
 
 public class Vocabulary {
-    public static final String METHOD_PREFIX="Method_";
-    public static final String TYPE_PREFIX="Type_";
+    public static final String METHOD_PREFIX="METHOD_";
+    public static final String TYPE_PREFIX="TYPE_";
     public static final String STRUCT_OR_UNION_PREFIX="STRUCT_OR_UNION_";
     public static final String VAR_PREFIX="VAR_";
     public static List<String> methods = new ArrayList<>();

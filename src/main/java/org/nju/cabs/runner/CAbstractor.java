@@ -1,6 +1,5 @@
 package org.nju.cabs.runner;
 
-import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ErrorNode;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.nju.cabs.cInterpreter.CLexer;
@@ -13,51 +12,80 @@ import org.nju.cabs.utils.AntlrUtils;
 import org.nju.cabs.vocabulary.Vocabulary;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 public class CAbstractor {
-    public static void abs(String inputPath,String outputCodePath,String outputMapPath) throws IOException {
-        InputStream inputStream = new FileInputStream(inputPath);
-        CLexer cLexer=new CLexer(CharStreams.fromStream(inputStream));
-        CParser cParser=new CParser(new CommonTokenStream(cLexer));
+    public static void abs(String inputPath1,String inputPath2,String outputCodePath1,String outputCodePath2,String outputMapPath) throws IOException {
+        InputStream inputStream1 = Files.newInputStream(Paths.get(inputPath1));
+        CLexer cLexer1=new CLexer(CharStreams.fromStream(inputStream1));
+        CParser cParser1=new CParser(new CommonTokenStream(cLexer1));
         AbsDetector listener=new AbsDetector();
-        cParser.addParseListener(listener);
-        System.out.println("Before abs,ast looks like: "+cParser.compilationUnit().toStringTree(cParser));
-        cParser.reset();
-        cParser.removeParseListener(listener);
+        cParser1.addParseListener(listener);
+        System.out.println("Before abs,code1 ast looks like: "+cParser1.compilationUnit().toStringTree(cParser1));
+        cParser1.reset();
+
+        InputStream inputStream2 = Files.newInputStream(Paths.get(inputPath2));
+        CLexer cLexer2=new CLexer(CharStreams.fromStream(inputStream2));
+        CParser cParser2=new CParser(new CommonTokenStream(cLexer2));
+        cParser2.addParseListener(listener);
+        System.out.println("Before abs,code2 ast looks like: "+cParser2.compilationUnit().toStringTree(cParser2));
+        cParser2.reset();
+
+        cParser1.removeParseListener(listener);
+        cParser2.removeParseListener(listener);
+
         AbsModifier listener2=new AbsModifier();
-        cParser.addParseListener(listener2);
-        CParser.CompilationUnitContext context=cParser.compilationUnit();
-//        ParseTree firstNotError = null;
-//        for(ParseTree parseTree:context.children){
-//            if(!(parseTree instanceof ErrorNode)){
-//                firstNotError= parseTree;
-//                break;
-//            }
-//        }
-//        String absCode=firstNotError==null?"":AntlrUtils.toCode(firstNotError);
-        StringBuilder absCode= new StringBuilder();
-        for(ParseTree parseTree:context.children){
+        cParser1.addParseListener(listener2);
+        CParser.CompilationUnitContext context1=cParser1.compilationUnit();
+        cParser2.addParseListener(listener2);
+        CParser.CompilationUnitContext context2=cParser2.compilationUnit();
+
+        StringBuilder absCode1= new StringBuilder();
+        for(ParseTree parseTree:context1.children){
             if(AntlrUtils.toCode(parseTree).contains("EOF"))continue;
 
             if(!(parseTree instanceof ErrorNode)){
-                absCode.append(AntlrUtils.toCode(parseTree));
+                absCode1.append(AntlrUtils.toCode(parseTree));
                 continue;
             }
-            absCode
-                    .append(absCode.length()==0?"":" ")
+            absCode1
+                    .append(absCode1.length()==0?"":" ")
                     .append(AntlrUtils.toErrorCode(AntlrUtils.toCode(parseTree)));
-
         }
-//        String absCode=firstNotError==null?"":AntlrUtils.toCode(firstNotError);
-        System.out.println("After abs,code looks like: "+ absCode);
+        System.out.println("After abs,code1 looks like: "+ absCode1);
 
-        //输出代码
-        if(!outputCodePath.endsWith(".c")){
-            outputCodePath+=".c";
+        StringBuilder absCode2= new StringBuilder();
+        for(ParseTree parseTree:context2.children){
+            if(AntlrUtils.toCode(parseTree).contains("EOF"))continue;
+
+            if(!(parseTree instanceof ErrorNode)){
+                absCode2.append(AntlrUtils.toCode(parseTree));
+                continue;
+            }
+            absCode2
+                    .append(absCode2.length()==0?"":" ")
+                    .append(AntlrUtils.toErrorCode(AntlrUtils.toCode(parseTree)));
         }
-        File f=new File(outputCodePath);
+        System.out.println("After abs,code2 looks like: "+ absCode2);
+
+        //输出代码1
+        if(!outputCodePath1.endsWith(".c")){
+            outputCodePath1+=".c";
+        }
+        File f=new File(outputCodePath1);
         FileWriter writer=new FileWriter(f);
-        writer.write(absCode.toString());
+        writer.write(absCode1.toString());
+        writer.flush();
+        writer.close();
+
+        //输出代码2
+        if(!outputCodePath2.endsWith(".c")){
+            outputCodePath2+=".c";
+        }
+        File ff=new File(outputCodePath2);
+        writer=new FileWriter(ff);
+        writer.write(absCode2.toString());
         writer.flush();
         writer.close();
 
@@ -65,8 +93,8 @@ public class CAbstractor {
         if(!outputMapPath.endsWith(".map")){
             outputMapPath+=".map";
         }
-        File ff=new File(outputMapPath);
-        writer=new FileWriter(ff);
+        File fff=new File(outputMapPath);
+        writer=new FileWriter(fff);
         writer.write("Method:");
         writer.write("\n");
         for(int i=0;i< Vocabulary.methods.size();i++){
@@ -117,7 +145,7 @@ public class CAbstractor {
             System.err.println("not enough params");
             return;
         }
-        abs(args[0],args[1],args[2]);
+        abs(args[0],args[1],args[2],args[3],args[4]);
 //        abs("C:\\Users\\tom\\Desktop\\cabs\\src\\main\\resources\\code\\c\\test3.c","C:\\Users\\tom\\Desktop\\cabs\\src\\main\\resources\\code\\c\\output3.c","C:\\Users\\tom\\Desktop\\cabs\\src\\main\\resources\\code\\c\\output3.map");
     }
 
